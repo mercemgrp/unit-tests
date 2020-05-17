@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ExampleChildComponent } from './components/example-child/example-child.component';
 import { ExampleService } from './example.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
   declarations: [ExampleContainerComponent, ExampleChildComponent],
   imports: [
     RouterModule.forChild(routes),
+    HttpClientModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule],
