@@ -1,0 +1,15 @@
+<section>
+    <h1>Data</h1>
+    <article *ngFor="let elem of data">
+      <div>id :: {{elem.id}}</div>
+      <div>title :: {{elem.title}}</div>
+    </article>
+  </section>
+  <section>
+    <form *ngIf="form" [formGroup]="form" (ngSubmit)="submit()">
+      <div>
+        <label [for]="inputName"></label>
+        <input formControlName="inputControl" type="text" id="inputName"/>
+      </div>
+    </form>
+  </section>

@@ -6,6 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
+    "test:coverage": "ng test --watch=false --code-coverage=true",
+    "test:watch": "ng test --code-coverage=true",
+    "test:chrome": "ng test --browsers=Chrome",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
