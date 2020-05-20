@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Item } from './item';
 
 @Injectable()
-export class ExampleService {
+export class ItemsService {
   data: Item[];
   constructor(private http: HttpClient) { }
 
@@ -13,12 +13,12 @@ export class ExampleService {
     return this.data ? of(this.data) : this.getDataFromService();
   }
 
-  pushData(item: Item) {
+  pushData(item: Item): Observable<Item[]> {
+    if (!item) {
+      return of(this.data);
+    }
     this.data.push(item);
-    this.data.map(i => {
-      i.description = `${i.id} - ${i.title}`;
-      return i;
-    });
+    this.data = this.transformData(this.data);
     return of(this.data);
 
   }
@@ -29,14 +29,20 @@ export class ExampleService {
   private getDataFromService(): Observable<Item[]> {
     return this.http.get<Item[]>
       ('./assets/data/example.json').pipe(
-        map(resp => {
-          this.data = resp;
-          return resp.map(item => {
-            item.description = `${item.id} - ${item.title}`;
-            return item;
-          });
-        }
+        map(
+          resp => {
+            this.data = this.transformData(resp);
+            return this.data;
+          },
+          () => 'Ha ocurrido un error'
         )
       );
+  }
+
+  private transformData(data) {
+    return data.map(item => {
+      item.description = `${item.id} - ${item.title}`;
+      return item;
+    });
   }
 }

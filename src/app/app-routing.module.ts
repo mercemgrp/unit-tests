@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./modules/example/example.module').then(m => m.ExampleModule),
+      import('./modules/items/items.module').then(m => m.ItemsModule),
     canActivate: [AppGuard]
   },
 ];

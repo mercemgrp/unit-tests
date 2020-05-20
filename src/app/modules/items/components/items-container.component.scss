@@ -1,0 +1,14 @@
+
+#{'.c-items-container'} {
+  padding-left: 50px;
+  & section {
+    padding-left: 10px;
+    & article {
+      padding-bottom: 10px;
+      border: 1px solid;
+    }
+  }
+  & button {
+    margin: 10px 0px;
+  }
+}

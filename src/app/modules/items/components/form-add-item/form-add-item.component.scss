@@ -1,0 +1,13 @@
+
+#{'.c-form-add-item'} {
+  padding: 5px 0px;
+  & label {
+    margin-right: 5px;
+  }
+  &--disabled {
+    opacity: 0.5;
+  }
+  &--error {
+    color: red;
+  }
+}

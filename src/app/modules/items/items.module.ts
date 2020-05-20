@@ -1,21 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ExampleContainerComponent } from './components/example-container.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ExampleChildComponent } from './components/example-child/example-child.component';
-import { ExampleService } from './example.service';
+import { ItemsService } from './items.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import {
+  ItemsContainerComponent,
+  ItemComponent,
+  ItemsComponent,
+  FormAddItemComponent
+} from './components';
 
 const routes: Routes = [
   {
     path: '',
-    component: ExampleContainerComponent
+    component: ItemsContainerComponent
   },
 ];
 
 @NgModule({
-  declarations: [ExampleContainerComponent, ExampleChildComponent],
+  declarations: [
+    ItemsContainerComponent,
+    ItemsComponent,
+    ItemComponent,
+    FormAddItemComponent
+  ],
   imports: [
     RouterModule.forChild(routes),
     HttpClientModule,
@@ -23,7 +32,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule],
   exports: [RouterModule],
-  providers: [ExampleService]
+  providers: [ItemsService]
 })
 
-export class ExampleModule { }
+export class ItemsModule { }

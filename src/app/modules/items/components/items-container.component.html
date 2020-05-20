@@ -1,0 +1,10 @@
+<div class="c-items-container">
+  <h1>Items</h1>
+  <section *ngIf="data">
+    <app-items [data]="data"></app-items>
+  </section>
+  <section>
+    <button (click)="toggleAddItem()" type="button">{{ showForm === true ? 'Hide form' : 'Add item' }} </button>
+    <app-form-add-item *ngIf="showForm" [nextId]="nextId" (submitEv)="submit($event)"></app-form-add-item>
+  </section>
+</div>                                                                                                                        
