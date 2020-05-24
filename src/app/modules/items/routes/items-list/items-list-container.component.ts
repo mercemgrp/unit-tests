@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ItemsService } from '../items.service';
+import { ItemsService } from '../../items.service';
 import { map, first, } from 'rxjs/operators';
-import { Item } from '../item';
+import { Item } from '../../item';
 @Component({
-  selector: 'app-items-container',
-  templateUrl: './items-container.component.html',
-  styleUrls: ['./items-container.component.scss']
+  selector: 'app-items-list-container',
+  templateUrl: './items-list-container.component.html',
+  styleUrls: ['./items-list-container.component.scss']
 })
-export class ItemsContainerComponent implements OnInit {
+export class ItemsListContainerComponent implements OnInit {
   data;
   showForm = false;
   nextId: number;

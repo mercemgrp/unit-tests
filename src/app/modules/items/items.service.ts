@@ -23,7 +23,9 @@ export class ItemsService {
 
   }
   getNextId() {
-    return this.data[this.data.length - 1].id + 1;
+    return this.data &&
+           Array.isArray(this.data) &&
+           this.data.length > 0 ? this.data[this.data.length - 1].id + 1 : 1;
   }
 
   private getDataFromService(): Observable<Item[]> {

@@ -1,41 +1,48 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Item } from '../../item';
+import { Item } from '../../../item';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-add-item',
   templateUrl: './form-add-item.component.html',
   styleUrls: ['./form-add-item.component.scss']
 })
-export class FormAddItemComponent implements OnInit, OnChanges {
+export class FormAddItemComponent implements OnChanges {
   @Input() nextId: number;
   @Output() submitEv = new EventEmitter<Item>();
+  get idControl() {
+    return this.form ? this.form.get('id') : null;
+  }
+  get titleControl() {
+    return this.form ? this.form.get('title') : null;
+  }
+  get showError() {
+    return this.formSubmitted && !this.form.valid;
+  }
   form: FormGroup;
-  formHasError = false;
+  formInvalid = false;
+  private formSubmitted = false;
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private fb: FormBuilder) { }
 
-  ngOnInit() {
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes?: SimpleChanges) {
     if (!this.form) {
       this.createForm();
     }
-    if (changes.nextId && changes.nextId.currentValue !== undefined) {
+    if (changes && changes.nextId && changes.nextId.currentValue !== undefined) {
       this.clearAndUpdateForm();
     }
   }
 
   submit() {
-    if (!this.form.valid) {
-      this.formHasError = true;
-      return;
+    this.formSubmitted = true;
+    this.formInvalid = !this.form.valid;
+    if (this.form.valid) {
+      this.submitEv.emit(this.form.getRawValue());
     }
-    this.submitEv.emit(this.form.getRawValue());
   }
 
   private createForm() {
@@ -43,16 +50,15 @@ export class FormAddItemComponent implements OnInit, OnChanges {
       id: {value: this.nextId, disabled: true },
       title: ['', Validators.required]
     });
-    this.form.get('title').valueChanges
+    this.titleControl.valueChanges
     .pipe(takeUntil(this.ngUnsubscribe))
     .subscribe(() => {
-      this.formHasError = false;
+      this.formSubmitted = false;
     });
   }
 
   private clearAndUpdateForm() {
     this.form.get('id').setValue(this.nextId);
-    this.form.get('title').markAsUntouched();
     this.form.get('title').reset();
   }
 

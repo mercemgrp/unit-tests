@@ -5,24 +5,22 @@ import { ItemsService } from './items.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {
-  ItemsContainerComponent,
-  ItemComponent,
+  ItemsListContainerComponent,
   ItemsComponent,
   FormAddItemComponent
-} from './components';
+} from './routes/items-list';
 
 const routes: Routes = [
   {
     path: '',
-    component: ItemsContainerComponent
-  },
+    component: ItemsListContainerComponent
+  }
 ];
 
 @NgModule({
   declarations: [
-    ItemsContainerComponent,
+    ItemsListContainerComponent,
     ItemsComponent,
-    ItemComponent,
     FormAddItemComponent
   ],
   imports: [
@@ -31,8 +29,12 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule],
-  exports: [RouterModule],
-  providers: [ItemsService]
+  exports: [
+    RouterModule
+  ],
+  providers: [
+    ItemsService
+  ]
 })
 
 export class ItemsModule { }

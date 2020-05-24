@@ -1,7 +1,7 @@
-<div class="c-items-container">
+<div class="c-items-list-container">
   <h1>Items</h1>
   <section *ngIf="data">
-    <app-items [data]="data"></app-items>
+    <app-items [items]="data"></app-items>
   </section>
   <section>
     <button (click)="toggleAddItem()" type="button">{{ showForm === true ? 'Hide form' : 'Add item' }} </button>

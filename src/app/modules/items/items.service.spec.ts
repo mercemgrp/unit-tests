@@ -39,7 +39,8 @@ describe('ItemsService', () => {
         observable.subscribe(res => {
           expect(res).toBeDefined();
         });
-        httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpoint)).flush(data);
+        httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpoint))
+          .flush(data);
         httpMock.verify();
       });
       it('should transform data', () => {
@@ -60,7 +61,7 @@ describe('ItemsService', () => {
       });
     });
     describe('#service thrown an error', (() => {
-      it('should get error', () => {
+      xit('should get error', () => {
         const observable = service.getData();
         observable.subscribe(
           () => fail('should have failed'),
@@ -107,5 +108,33 @@ describe('ItemsService', () => {
         );
       tick();
     }));
+    it('should push data and transform', fakeAsync(() => {
+      const result = [
+        {id: 1, title: 'test', description : '1 - test'},
+        {id: 2, title: 'test', description: '2 - test'},
+        {id: 3, title: 'test', description: '3 - test'}
+      ];
+      service.pushData({id: 3, title: 'test'})
+        .subscribe(
+          resp => {
+            expect(resp).toEqual(result);
+          }
+        );
+      tick();
+    }));
+  });
+  describe('#getNextId', () => {
+    it('should get next id', () => {
+      service.data = data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
+      expect(service.getNextId()).toBe(3);
+    });
+    it('should get 1 when data is null', () => {
+      service.data = null;
+      expect(service.getNextId()).toBe(1);
+    });
+    it('should get 1 when no data', () => {
+      service.data = [];
+      expect(service.getNextId()).toBe(1);
+    });
   });
 });

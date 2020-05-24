@@ -6,7 +6,7 @@
   <div class="c-form-add-item">
     <label [for]="titleId" >Title</label>
     <input formControlName="title" type="text" id="titleId"/>
-    <div class="c-form-add-item--error" *ngIf="formHasError">Title must have a value</div>
+    <div class="c-form-add-item--error" *ngIf="showError">Title must have a value</div>
   </div>
   <button type="submit">Submit</button>
 </form>

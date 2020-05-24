@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ItemsContainerComponent } from './items-container.component';
+import { ItemsListContainerComponent } from './items-list-container.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ItemsService } from '../items.service';
+import { ItemsService } from '../../items.service';
 import { of, throwError } from 'rxjs';
-import { Item } from '../item';
+import { Item } from '../../item';
 
-describe('ItemsContainerComponent', () => {
+describe('ItemsListContainerComponent', () => {
   const data = [{id: 1, title: 'test', description: '1 - test'}];
   const pushData = [
     {id: 1, title: 'test', description: '1 - test'},
@@ -24,8 +24,8 @@ describe('ItemsContainerComponent', () => {
       return nextId;
     }
   }
-  let component: ItemsContainerComponent;
-  let fixture: ComponentFixture<ItemsContainerComponent>;
+  let component: ItemsListContainerComponent;
+  let fixture: ComponentFixture<ItemsListContainerComponent>;
   let service: ItemsService;
 
   beforeEach(async(() => {
@@ -34,7 +34,7 @@ describe('ItemsContainerComponent', () => {
         HttpClientTestingModule
       ],
       declarations: [
-        ItemsContainerComponent
+        ItemsListContainerComponent
       ],
       providers: [
         {provide: ItemsService, useClass: ItemsServiceMock}
@@ -45,7 +45,7 @@ describe('ItemsContainerComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ItemsContainerComponent);
+    fixture = TestBed.createComponent(ItemsListContainerComponent);
     component = fixture.componentInstance;
     service = TestBed.get(ItemsService);
   });
@@ -109,6 +109,12 @@ describe('ItemsContainerComponent', () => {
       component.showForm = true;
       component.toggleAddItem();
       expect(component.showForm).toBe(false);
+    }));
+    it('#data should be filled with the service response', fakeAsync(() => {
+      spyOn(service, 'pushData').and.returnValue(of([]));
+      component.submit({} as Item);
+      tick();
+      expect(component.data).toEqual([]);
     }));
     describe('#submit', () => {
       let spyPushData;
