@@ -6,26 +6,47 @@ import { Item } from './item';
 
 @Injectable()
 export class ItemsService {
-  data: Item[];
+  items: Item[];
   constructor(private http: HttpClient) { }
 
-  getData(): Observable<Item[]> {
-    return this.data ? of(this.data) : this.getDataFromService();
+  getItems(): Observable<Item[]> {
+    return this.items ? of(this.items) : this.getDataFromService();
   }
 
-  pushData(item: Item): Observable<Item[]> {
+  getItem(id: number): Observable<Item> {
+    return this.getItems().pipe(
+      map(resp => this.items.find(item => item.id === id)
+      )
+    );
+  }
+
+  pushItem(item: Item): Observable<Item[]> {
     if (!item) {
-      return of(this.data);
+      return of(this.items);
     }
-    this.data.push(item);
-    this.data = this.transformData(this.data);
-    return of(this.data);
+    this.items.push(item);
+    this.items = this.transformData(this.items);
+    return of(this.items);
+
+  }
+  modifyItem(item: Item): Observable<Item[]> {
+    if (!item) {
+      return of(this.items);
+    }
+    this.items = this.items.map(i => {
+      if (i.id === item.id) {
+        i.title = item.title;
+      }
+      return item;
+    });
+    this.items = this.transformData(this.items);
+    return of(this.items);
 
   }
   getNextId() {
-    return this.data &&
-           Array.isArray(this.data) &&
-           this.data.length > 0 ? this.data[this.data.length - 1].id + 1 : 1;
+    return this.items &&
+           Array.isArray(this.items) &&
+           this.items.length > 0 ? this.items[this.items.length - 1].id + 1 : 1;
   }
 
   private getDataFromService(): Observable<Item[]> {
@@ -33,8 +54,8 @@ export class ItemsService {
       ('./assets/data/example.json').pipe(
         map(
           resp => {
-            this.data = this.transformData(resp);
-            return this.data;
+            this.items = this.transformData(resp);
+            return this.items;
           },
           () => 'Ha ocurrido un error'
         )

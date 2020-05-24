@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ItemsComponent } from './items.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ItemsComponent', () => {
   let component: ItemsComponent;
@@ -9,6 +10,7 @@ describe('ItemsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ItemsComponent ],
+      imports: [ RouterTestingModule ],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();

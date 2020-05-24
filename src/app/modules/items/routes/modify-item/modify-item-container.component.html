@@ -1,0 +1,5 @@
+<div class="c-items-list-container">
+  <h1>Item {{item?.id}}</h1>
+  <app-form-modify-item *ngIf="item" [item]="item" (submitEv)="submit($event)"></app-form-modify-item>
+  <button type="button" (click)="navigateToItems()">Atrás</button>
+</div>

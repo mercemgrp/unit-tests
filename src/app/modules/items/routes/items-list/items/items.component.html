@@ -1,6 +1,6 @@
-<h2></h2>
-<article *ngFor="let item of items">
-  <div>id :: {{item.id}}</div>
-  <div>title :: {{item.title}}</div>
-  <div>description :: {{item.description}}</div>
+<article class="c-items" *ngFor="let item of items">
+  <div>Id :: {{item.id}}</div>
+  <div>Title :: {{item.title}}</div>
+  <div>Description :: {{item.description}}</div>
+  <button (click)="modifyItem(item)" type="button"> Modify </button>
 </article>

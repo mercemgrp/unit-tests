@@ -14,10 +14,10 @@ describe('ItemsListContainerComponent', () => {
   ];
   const nextId = 2;
   class ItemsServiceMock {
-    getData() {
+    getItems() {
       return of(data);
     }
-    pushData() {
+    pushItem() {
       return of(pushData);
     }
     getNextId() {
@@ -54,15 +54,15 @@ describe('ItemsListContainerComponent', () => {
     expect(component).toBeTruthy();
   });
   describe('#ngOnInit', () => { // Usamos tal cuál los valores retornados por ItemsServiceMock
-    let spyGetData;
+    let spyGetItems;
     beforeEach(() => {
-      spyGetData = spyOn(service, 'getData').and.callThrough();
-        // Espiamos "getData" y cuando llegue a eas función, se ejecuta ("callThrough")
+      spyGetItems = spyOn(service, 'getItems').and.callThrough();
+        // Espiamos "getItems" y cuando llegue a eas función, se ejecuta ("callThrough")
     });
     it('should call get data service', fakeAsync(() => {
       fixture.detectChanges(); // detecta los cambios y actualiza la vista. Ejecutamos ngOnInit
       tick(); // Resuelve elementos asíncronos (observables)
-      expect(spyGetData).toHaveBeenCalled(); // Comprobamos que ha llamado a esta función
+      expect(spyGetItems).toHaveBeenCalled(); // Comprobamos que ha llamado a esta función
     }));
     it('should fill data with the response', fakeAsync(() => {
       fixture.detectChanges();
@@ -85,8 +85,8 @@ describe('ItemsListContainerComponent', () => {
   });
   describe('#ngOnInit when service returns an error', () => {
     beforeEach(() => {
-      spyOn(service, 'getData').and.returnValue(throwError('err'));
-      // En este caso modificamos lo que devuelve "getData", devolviendo un error.
+      spyOn(service, 'getItems').and.returnValue(throwError('err'));
+      // En este caso modificamos lo que devuelve "getItems", devolviendo un error.
       // Por lo que el observable pasa por "error"
     });
     it('should #data be null', fakeAsync(() => {
@@ -111,7 +111,7 @@ describe('ItemsListContainerComponent', () => {
       expect(component.showForm).toBe(false);
     }));
     it('#data should be filled with the service response', fakeAsync(() => {
-      spyOn(service, 'pushData').and.returnValue(of([]));
+      spyOn(service, 'pushItem').and.returnValue(of([]));
       component.submit({} as Item);
       tick();
       expect(component.data).toEqual([]);
@@ -120,7 +120,7 @@ describe('ItemsListContainerComponent', () => {
       let spyPushData;
       let spyNextId;
       beforeEach(() => {
-        spyPushData = spyOn(service, 'pushData').and.callThrough();
+        spyPushData = spyOn(service, 'pushItem').and.callThrough();
         spyNextId = spyOn(service, 'getNextId').and.callThrough();
       });
       it('should call service to push data', fakeAsync(() => {

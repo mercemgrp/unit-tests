@@ -1,0 +1,12 @@
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="c-form-modify-item">
+      <label [for]="idId">Id</label>
+      <input formControlName="id" type="text" id="idId" class="c-form-modify-item--disabled"/>
+    </div>
+  <div class="c-form-modify-item">
+    <label [for]="titleId" >Title</label>
+    <input formControlName="title" type="text" id="titleId"/>
+    <div class="c-form-modify-item--error" *ngIf="showError">Title must have a value</div>
+  </div>
+  <button type="submit">Submit</button>
+</form>

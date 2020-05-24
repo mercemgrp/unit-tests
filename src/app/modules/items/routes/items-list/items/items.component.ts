@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Item } from '../../../item';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-items',
@@ -8,9 +9,15 @@ import { Item } from '../../../item';
 })
 export class ItemsComponent implements OnInit {
   @Input() items: Item[];
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
+  }
+
+  modifyItem(item: Item) {
+    this.router.navigate(['items/modify', item.id]);
   }
 
 }

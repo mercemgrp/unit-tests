@@ -9,11 +9,23 @@ import {
   ItemsComponent,
   FormAddItemComponent
 } from './routes/items-list';
+import {
+  ModifyItemContainerComponent,
+  FormModifyItemComponent
+} from './routes/modify-item';
 
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'items'
+  },
+  {
+    path: 'items',
     component: ItemsListContainerComponent
+  },
+  {
+    path: 'items/modify/:id',
+    component: ModifyItemContainerComponent
   }
 ];
 
@@ -21,14 +33,17 @@ const routes: Routes = [
   declarations: [
     ItemsListContainerComponent,
     ItemsComponent,
-    FormAddItemComponent
+    FormAddItemComponent,
+    ModifyItemContainerComponent,
+    FormModifyItemComponent
   ],
   imports: [
     RouterModule.forChild(routes),
     HttpClientModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule
+  ],
   exports: [
     RouterModule
   ],

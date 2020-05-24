@@ -17,7 +17,7 @@ export class ItemsListContainerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.itemsService.getData()
+    this.itemsService.getItems()
     .pipe(
       first()
     ).subscribe(
@@ -37,7 +37,7 @@ export class ItemsListContainerComponent implements OnInit {
   }
 
   submit(item: Item) {
-    this.itemsService.pushData(item).pipe(
+    this.itemsService.pushItem(item).pipe(
       first(),
       map(resp => {
         this.data = resp;

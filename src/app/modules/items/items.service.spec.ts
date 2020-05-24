@@ -22,7 +22,7 @@ describe('ItemsService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  describe('#getData', () => {
+  describe('#getItems', () => {
     let endpoint;
     describe('#no data stored in service', () => {
       beforeEach(() => {
@@ -31,11 +31,11 @@ describe('ItemsService', () => {
         endpoint = './assets/data/example.json';
       });
       it('should be an observable', () => {
-        const observable = service.getData();
+        const observable = service.getItems();
         expect(observable instanceof Observable).toEqual(true);
       });
       it('should get data from service', () => {
-        const observable = service.getData();
+        const observable = service.getItems();
         observable.subscribe(res => {
           expect(res).toBeDefined();
         });
@@ -44,7 +44,7 @@ describe('ItemsService', () => {
         httpMock.verify();
       });
       it('should transform data', () => {
-        const observable = service.getData();
+        const observable = service.getItems();
         observable.subscribe(res => {
           expect(res).toEqual(dataTransformed);
         });
@@ -52,9 +52,9 @@ describe('ItemsService', () => {
         httpMock.verify();
       });
       it('should fill #data variable with the response transformed', () => {
-        const observable = service.getData();
+        const observable = service.getItems();
         observable.subscribe(() => {
-          expect(service.data).toEqual(dataTransformed);
+          expect(service.items).toEqual(dataTransformed);
         });
         httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpoint)).flush(data);
         httpMock.verify();
@@ -62,7 +62,7 @@ describe('ItemsService', () => {
     });
     describe('#service thrown an error', (() => {
       xit('should get error', () => {
-        const observable = service.getData();
+        const observable = service.getItems();
         observable.subscribe(
           () => fail('should have failed'),
           err => {
@@ -79,12 +79,12 @@ describe('ItemsService', () => {
     describe('#data stored in service', () => {
       beforeEach(() => {
         data = [{id: 1, title: 'test', description: '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-        service.data = data;
+        service.items = data;
       });
       it('should get data from variable', fakeAsync(() => {
         data = [{id: 1, title: 'test', description: '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-        service.data = data;
-        const observable = service.getData();
+        service.items = data;
+        const observable = service.getItems();
         observable.subscribe(res => {
           expect(res).toEqual(data);
         });
@@ -97,13 +97,13 @@ describe('ItemsService', () => {
   describe('#pushData', () => {
     beforeEach(() => {
       data = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-      service.data = data;
+      service.items = data;
     });
     it('should return data in variable when param is null', fakeAsync(() => {
-      service.pushData(null)
+      service.pushItem(null)
         .subscribe(
           resp => {
-            expect(resp).toEqual(service.data);
+            expect(resp).toEqual(service.items);
           }
         );
       tick();
@@ -114,7 +114,7 @@ describe('ItemsService', () => {
         {id: 2, title: 'test', description: '2 - test'},
         {id: 3, title: 'test', description: '3 - test'}
       ];
-      service.pushData({id: 3, title: 'test'})
+      service.pushItem({id: 3, title: 'test'})
         .subscribe(
           resp => {
             expect(resp).toEqual(result);
@@ -125,15 +125,15 @@ describe('ItemsService', () => {
   });
   describe('#getNextId', () => {
     it('should get next id', () => {
-      service.data = data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
+      service.items = data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
       expect(service.getNextId()).toBe(3);
     });
     it('should get 1 when data is null', () => {
-      service.data = null;
+      service.items = null;
       expect(service.getNextId()).toBe(1);
     });
     it('should get 1 when no data', () => {
-      service.data = [];
+      service.items = [];
       expect(service.getNextId()).toBe(1);
     });
   });
