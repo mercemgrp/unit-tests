@@ -1,12 +1,12 @@
 <form *ngIf="form" [formGroup]="form" (ngSubmit)="submit()">
   <div class="c-form-add-item">
       <label [for]="idId">Id</label>
-      <input formControlName="id" type="text" id="idId" class="c-form-add-item--disabled"/>
+      <input formControlName="id" type="text" id="idId" class="qa-input-id c-form-add-item--disabled"/>
     </div>
   <div class="c-form-add-item">
     <label [for]="titleId" >Title</label>
-    <input formControlName="title" type="text" id="titleId"/>
-    <div class="c-form-add-item--error" *ngIf="showError">Title must have a value</div>
+    <input formControlName="title" type="text" id="titleId" class="qa-input-title"/>
+    <div class="c-form-add-item--error qa-title-error" *ngIf="showError">Title must have a value</div>
   </div>
-  <button type="submit">Submit</button>
+  <button type="submit" class="qa-btn-submit">Submit</button>
 </form>

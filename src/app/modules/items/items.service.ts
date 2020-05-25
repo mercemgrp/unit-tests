@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of, Observable } from 'rxjs';
+import { of, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Item } from './item';
@@ -10,36 +10,31 @@ export class ItemsService {
   constructor(private http: HttpClient) { }
 
   getItems(): Observable<Item[]> {
-    return this.items ? of(this.items) : this.getDataFromService();
+    return this.items ? of(this.items) : this.getItemsFromService();
   }
 
   getItem(id: number): Observable<Item> {
     return this.getItems().pipe(
-      map(resp => this.items.find(item => item.id === id)
+      map(resp => resp.find(item => item.id === id)
       )
     );
   }
 
   pushItem(item: Item): Observable<Item[]> {
     if (!item) {
-      return of(this.items);
+      return throwError('error');
     }
-    this.items.push(item);
-    this.items = this.transformData(this.items);
+    this.items.push(this.transformItem(item));
     return of(this.items);
 
   }
   modifyItem(item: Item): Observable<Item[]> {
     if (!item) {
-      return of(this.items);
+      return throwError('error');
     }
-    this.items = this.items.map(i => {
-      if (i.id === item.id) {
-        i.title = item.title;
-      }
-      return item;
-    });
-    this.items = this.transformData(this.items);
+    const itemTemp = this.transformItem(item);
+    this.items.find(i => i.id === item.id);
+    this.items = this.items.map(i => i.id === itemTemp.id ? itemTemp : i);
     return of(this.items);
 
   }
@@ -49,23 +44,25 @@ export class ItemsService {
            this.items.length > 0 ? this.items[this.items.length - 1].id + 1 : 1;
   }
 
-  private getDataFromService(): Observable<Item[]> {
+  private getItemsFromService(): Observable<Item[]> {
     return this.http.get<Item[]>
-      ('./assets/data/example.json').pipe(
+      ('./assets/data/items.json').pipe(
         map(
           resp => {
-            this.items = this.transformData(resp);
+            this.items = this.transformItems(resp);
             return this.items;
           },
-          () => 'Ha ocurrido un error'
+          () => throwError('error')
         )
       );
   }
 
-  private transformData(data) {
-    return data.map(item => {
-      item.description = `${item.id} - ${item.title}`;
-      return item;
-    });
+  private transformItems(data) {
+    return data.map(item => this.transformItem(item));
+  }
+
+  private transformItem(item: Item) {
+    item.description = `${item.id} - ${item.title}`;
+    return item;
   }
 }

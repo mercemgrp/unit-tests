@@ -58,8 +58,8 @@ export class FormAddItemComponent implements OnChanges {
   }
 
   private clearAndUpdateForm() {
-    this.form.get('id').setValue(this.nextId);
-    this.form.get('title').reset();
+    this.idControl.setValue(this.nextId);
+    this.titleControl.reset();
   }
 
 }

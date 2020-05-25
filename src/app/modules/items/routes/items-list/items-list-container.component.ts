@@ -38,12 +38,14 @@ export class ItemsListContainerComponent implements OnInit {
 
   submit(item: Item) {
     this.itemsService.pushItem(item).pipe(
-      first(),
-      map(resp => {
+      first()
+    ).subscribe(
+      resp => {
         this.data = resp;
         this.nextId = this.itemsService.getNextId();
-      })
-    ).subscribe();
+      },
+      () => console.log('error')
+    );
   }
 
 }

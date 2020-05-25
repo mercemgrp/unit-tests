@@ -105,18 +105,12 @@ describe('ItemsListContainerComponent', () => {
       fixture.detectChanges();
       // detecta los cambios y actualiza la vista. Ejecutamos ngOnInit antes de cada test
     });
-    it('should toggle #showForm', (() => {
+    it('should toggle #showForm when #toggleAddItem()', (() => {
       component.showForm = true;
       component.toggleAddItem();
       expect(component.showForm).toBe(false);
     }));
-    it('#data should be filled with the service response', fakeAsync(() => {
-      spyOn(service, 'pushItem').and.returnValue(of([]));
-      component.submit({} as Item);
-      tick();
-      expect(component.data).toEqual([]);
-    }));
-    describe('#submit', () => {
+    describe('#submit()', () => {
       let spyPushData;
       let spyNextId;
       beforeEach(() => {

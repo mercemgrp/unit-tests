@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormAddItemComponent } from './form-add-item.component';
-import { FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SimpleChanges } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
@@ -33,17 +33,17 @@ describe('FormAddItemComponent', () => {
   it('#form shouldnt be defined', () => {
     expect(component.form).toBeUndefined();
   });
-  it('get #idControl should be null', () => {
+  it('getter #idControl should be null', () => {
     expect(component.idControl).toBe(null);
   });
-  it('get #titleControl should be null', () => {
+  it('getter #titleControl should be null', () => {
     expect(component.titleControl).toBe(null);
   });
-  it('should create form when changes form', () => {
+  it('should create form when #ngOnChanges() the first time', () => {
     component.ngOnChanges(null);
     expect(component.form).toBeDefined();
   });
-  describe('changes #nextId property', () => {
+  describe('changes @nextId executing #ngOnChanges()', () => {
     beforeEach(() => {
       component.nextId = 3;
       const changes: SimpleChanges = {
@@ -63,7 +63,7 @@ describe('FormAddItemComponent', () => {
     it('should get the title when call get #titleControl', () => {
       expect(component.titleControl).toBeDefined();
     });
-    it('shouldnt create form newly when call #ngOnChanges() and form was defined previously', () => {
+    it('shouldnt create form when #ngOnChanges() the second time', () => {
       const initForm = component.form;
       component.ngOnChanges(null);
       expect(component.form).toEqual(initForm);
@@ -76,7 +76,7 @@ describe('FormAddItemComponent', () => {
       component.ngOnChanges(changes);
       expect(component.titleControl.value).toBe(null);
     });
-    describe('#submit', () => {
+    describe('#submit()', () => {
       it('getter #showError should be true when submit and form is not valid', () => {
         component.submit();
         expect(component.showError).toBe(true);
@@ -113,28 +113,28 @@ describe('FormAddItemComponent', () => {
     });
     it('should submit when click in button', () => {
       const spyButton = spyOn(component, 'submit');
-      fixture.nativeElement.querySelector('button[type="submit"]').click();
+      fixture.nativeElement.querySelector('.qa-btn-submit').click();
       expect(spyButton).toHaveBeenCalled();
     });
-    it('shouldnt exist div with class "c-form-add-item--error" when #showError is false', () => {
-      const element = fixture.debugElement.query(By.css('c-form-add-item--error'));
+    it('shouldnt exist div with class "qa-title-error" when #showError is false', () => {
+      const element = fixture.debugElement.query(By.css('qa-title-error'));
       expect(element).toBe(null);
     });
-    it('should exist div with class "c-form-add-item--error" when getter #showError is true', () => {
+    it('should exist div with class "qa-title-error" when getter #showError is true', () => {
       component.submit(); // Ejecutamos submit para que el getter showError() devuelva true
       fixture.detectChanges(); // Actualizamos la vista
-      const element = fixture.debugElement.query(By.css('c-form-add-item--error'));
+      const element = fixture.debugElement.query(By.css('qa-title-error'));
       expect(element).toBe(null); // Comprobamos que el elemento no se muestra
     });
     it('form should be invalid when title control is empty', () => {
-      const element = fixture.debugElement.query(By.css('#titleId'));
+      const element = fixture.debugElement.query(By.css('.qa-input-title'));
       element.nativeElement.value = '';
       element.nativeElement.dispatchEvent(new Event('input'));
       fixture.detectChanges();
       expect(component.form.valid).toBe(false);
     });
     it('form should be valid when title control has a value', () => {
-      const element = fixture.debugElement.query(By.css('#titleId'));
+      const element = fixture.debugElement.query(By.css('.qa-input-title'));
       element.nativeElement.value = 'test';
       element.nativeElement.dispatchEvent(new Event('input'));
       fixture.detectChanges();

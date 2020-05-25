@@ -11,21 +11,7 @@ import { ItemsService } from '../../items.service';
   styleUrls: ['./modify-item-container.component.scss']
 })
 export class ModifyItemContainerComponent implements OnInit {
-  get idControl() {
-    return this.form ? this.form.get('id') : null;
-  }
-  get titleControl() {
-    return this.form ? this.form.get('title') : null;
-  }
-  get showError() {
-    return this.formSubmitted && !this.form.valid;
-  }
-  form: FormGroup;
-  formInvalid = false;
   item: Item;
-
-  private formSubmitted = false;
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
