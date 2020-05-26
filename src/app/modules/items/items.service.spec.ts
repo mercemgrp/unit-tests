@@ -4,9 +4,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { Observable } from 'rxjs';
 
 describe('ItemsService', () => {
-  let data;
-  let endpoint;
-  let dataTransformed;
+  let endpointGetItems;
   let service: ItemsService;
   let httpMock: HttpTestingController;
   beforeEach(() => {
@@ -18,60 +16,70 @@ describe('ItemsService', () => {
     );
     service = TestBed.get(ItemsService);
     httpMock = TestBed.get(HttpTestingController);
-    endpoint = './assets/data/items.json';
+    endpointGetItems = './assets/data/items.json';
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  describe('#getItems', () => {
-    describe('#no data stored in service', () => {
-      beforeEach(() => {
-        data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
-        dataTransformed = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-      });
-      it('should be an observable', () => {
-        const observable = service.getItems();
-        expect(observable instanceof Observable).toEqual(true);
-      });
-      it('should data from service and transform', () => {
-        const observable = service.getItems();
-        observable.subscribe(res => {
-          expect(res).toEqual(dataTransformed);
-        });
-        httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpoint))
-          .flush(data);
-        httpMock.verify();
-      });
-      it('should fill #data variable with the response transformed', () => {
-        const observable = service.getItems();
-        observable.subscribe(() => {
-          expect(service.items).toEqual(dataTransformed);
-        });
-        httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpoint)).flush(data);
-        httpMock.verify();
-      });
+  describe('#items is null', () => {
+    beforeEach(() => {
+      service.items = null;
     });
-    describe('#data stored in service', () => {
-      it('should get data from variable', fakeAsync(() => {
-        data = [{id: 1, title: 'test', description: '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-        service.items = data;
-        const observable = service.getItems();
-        observable.subscribe(res => {
-          expect(res).toEqual(data);
-        });
-        httpMock.expectNone(request => request.method === 'GET');
-        httpMock.verify();
-        tick();
-      }));
+    it('#getItems() should be an observable', () => {
+      const observable = service.getItems();
+      expect(observable instanceof Observable).toEqual(true);
+    });
+    it('#getItems() should get data from service and transform', () => {
+      const data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
+      const dataTransformed = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
+      const observable = service.getItems();
+      observable.subscribe(res => {
+        expect(res).toEqual(dataTransformed);
+      });
+      httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpointGetItems))
+        .flush(data);
+      httpMock.verify();
+    });
+    it('#getItems() should fill #items variable with the response transformed', () => {
+      const data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
+      const dataTransformed = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
+      const observable = service.getItems();
+      observable.subscribe(() => {
+        expect(service.items).toEqual(dataTransformed);
+      });
+      httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpointGetItems)).flush(data);
+      httpMock.verify();
+    });
+    it('#getItem() should call service and get item from variable', fakeAsync(() => {
+      const data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
+      const response = {id: 1, title: 'test', description : '1 - test'};
+      const observable = service.getItem(1);
+      observable.subscribe(res => {
+        expect(res).toEqual(response);
+      });
+      httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpointGetItems))
+        .flush(data);
+      httpMock.verify();
+    }));
+    it('#getNextId() should returns 1', () => {
+      expect(service.getNextId()).toBe(1);
     });
   });
-  describe('#pushItem', () => {
+  describe('#items is an array with values', () => {
     beforeEach(() => {
-      data = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-      service.items = data;
+      service.items = [{id: 1, title: 'test', description: '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
     });
-    it('should thrown an error when param is null', fakeAsync(() => {
+    it('#getItems() should get data from variable', fakeAsync(() => {
+      const observable = service.getItems();
+      observable.subscribe(res => {
+        expect(res).toEqual(service.items);
+      });
+      httpMock.expectNone(request => request.method === 'GET');
+      httpMock.verify();
+      tick();
+    }));
+    it('#pushItem() should thrown an error when param is null', fakeAsync(() => {
       service.pushItem(null)
         .subscribe(
           resp => {},
@@ -79,9 +87,9 @@ describe('ItemsService', () => {
         );
       tick();
     }));
-    it('should push data and transform when param is not null', fakeAsync(() => {
+    it('#pushItem() should push data and transform when param is not null', fakeAsync(() => {
       const result = [
-        {id: 1, title: 'test', description : '1 - test'},
+        {id: 1, title: 'test', description: '1 - test'},
         {id: 2, title: 'test', description: '2 - test'},
         {id: 3, title: 'test', description: '3 - test'}
       ];
@@ -93,13 +101,7 @@ describe('ItemsService', () => {
         );
       tick();
     }));
-  });
-  describe('#modifyItem', () => {
-    beforeEach(() => {
-      data = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-      service.items = data;
-    });
-    it('should thrown an error when param is null', fakeAsync(() => {
+    it('#modifyItem() should thrown an error when param is null', fakeAsync(() => {
       service.modifyItem(null)
         .subscribe(
           resp => {},
@@ -107,7 +109,7 @@ describe('ItemsService', () => {
         );
       tick();
     }));
-    it('should modify data and transform when param is not null', fakeAsync(() => {
+    it('#modifyItem() should modify data and transform when param is not null', fakeAsync(() => {
       const result = [
         {id: 1, title: 'test', description : '1 - test'},
         {id: 2, title: 'test-modified', description: '2 - test-modified'}
@@ -120,41 +122,19 @@ describe('ItemsService', () => {
         );
       tick();
     }));
-  });
-  describe('#getItem', () => {
-    it('should get item from variable when #items is filled', fakeAsync(() => {
-      data = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-      service.items = data;
+    it('#getItem() should get item from variable', fakeAsync(() => {
       service.getItem(1)
         .subscribe(
           resp => {expect(resp).toEqual({id: 1, title: 'test', description : '1 - test'}); }
         );
       tick();
     }));
-    it('should call service and get item from variable when #items isnt filled', fakeAsync(() => {
-      data = [{id: 1, title: 'test', description : '1 - test'}, {id: 2, title: 'test', description: '2 - test'}];
-      const response = {id: 1, title: 'test', description : '1 - test'};
-      const observable = service.getItem(1);
-      observable.subscribe(res => {
-        expect(res).toEqual(response);
-      });
-      httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpoint))
-        .flush(data);
-      httpMock.verify();
-    }));
-  });
-  describe('#getNextId', () => {
-    it('should get next id', () => {
-      service.items = data = [{id: 1, title: 'test'}, {id: 2, title: 'test'}];
+    it('#getNextId() should get next id', () => {
       expect(service.getNextId()).toBe(3);
     });
-    it('should get 1 when data is null', () => {
-      service.items = null;
-      expect(service.getNextId()).toBe(1);
-    });
-    it('should get 1 when no data', () => {
-      service.items = [];
-      expect(service.getNextId()).toBe(1);
-    });
+  });
+  it('#getNextId() should get 1 when #items is an empty array', () => {
+    service.items = [];
+    expect(service.getNextId()).toBe(1);
   });
 });

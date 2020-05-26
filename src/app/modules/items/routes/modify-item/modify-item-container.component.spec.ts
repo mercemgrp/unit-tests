@@ -59,41 +59,43 @@ describe('ModifyItemContainerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should get item from service at init', fakeAsync(() => {
-    const spy = spyOn(service, 'getItem').and.callThrough();
-    fixture.detectChanges();
-    tick();
-    expect(spy).toHaveBeenCalled();
-  }));
-  it('should fill #item from service response at init', fakeAsync(() => {
-    const response = {id: 1, title: 'test', description: '1 - test'};
-    spyOn(service, 'getItem').and.returnValue(of(response));
-    fixture.detectChanges();
-    tick();
-    expect(component.item).toEqual(response);
-  }));
-  describe('#componet initialized', () => {
+  describe('# testing component initialization', () => {
+    it('should get item from service', fakeAsync(() => {
+      const spy = spyOn(service, 'getItem').and.callThrough();
+      fixture.detectChanges();
+      tick();
+      expect(spy).toHaveBeenCalled();
+    }));
+    it('should fill #item from service response', fakeAsync(() => {
+      const response = {id: 1, title: 'test', description: '1 - test'};
+      spyOn(service, 'getItem').and.returnValue(of(response));
+      fixture.detectChanges();
+      tick();
+      expect(component.item).toEqual(response);
+    }));
+  });
+  describe('# testing componet after initialization', () => {
     beforeEach(fakeAsync(() => {
       fixture.detectChanges();
       tick();
     }));
+    it('should navigate when #navigateToItems()', () => {
+      const spy = spyOn(router, 'navigate');
+      component.navigateToItems();
+      expect(spy).toHaveBeenCalled();
+    });
+    it('should call service to modify item when #submit()', fakeAsync(() => {
+      spyOn(router, 'navigate');
+      const spy = spyOn(service, 'modifyItem').and.callThrough();
+      component.submit({id: 1, title: 'test'});
+      tick();
+      expect(spy).toHaveBeenCalled();
+    }));
+    it('should navigate when #submit()', fakeAsync(() => {
+      const spy = spyOn(router, 'navigate');
+      component.submit({id: 1, title: 'test'});
+      tick();
+      expect(spy).toHaveBeenCalled();
+    }));
   });
-  it('should navigate when #navigateToItems()', () => {
-    const spy = spyOn(router, 'navigate');
-    component.navigateToItems();
-    expect(spy).toHaveBeenCalled();
-  });
-  it('should call service to modify item when #submit()', fakeAsync(() => {
-    spyOn(router, 'navigate');
-    const spy = spyOn(service, 'modifyItem').and.callThrough();
-    component.submit({id: 1, title: 'test'});
-    tick();
-    expect(spy).toHaveBeenCalled();
-  }));
-  it('should navigate when #submit()', fakeAsync(() => {
-    const spy = spyOn(router, 'navigate');
-    component.submit({id: 1, title: 'test'});
-    tick();
-    expect(spy).toHaveBeenCalled();
-  }));
 });

@@ -1,6 +1,6 @@
 import { AppResolver } from './app.resolver';
-import { ActivatedRoute } from '@angular/router';
-import { TestBed } from '@angular/core/testing';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
@@ -9,8 +9,6 @@ describe('AppResolver', () => {
   let resolver: AppResolver;
 
   const params = {};
-
-  describe('should return true', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
@@ -27,5 +25,10 @@ describe('AppResolver', () => {
     it('should be created', (() => {
       expect(resolver).toBeTruthy();
     }));
-  });
+    it('should return true', fakeAsync(() => {
+      resolver.resolve({params} as ActivatedRouteSnapshot)
+        .subscribe(
+          resp => expect(resp).toBe(true)
+        )
+    }));
 });

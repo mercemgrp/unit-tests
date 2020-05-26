@@ -53,7 +53,7 @@ describe('ItemsListContainerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  describe('#ngOnInit', () => { // Usamos tal cuál los valores retornados por ItemsServiceMock
+  describe('# testing component initialization', () => { // Usamos tal cuál los valores retornados por ItemsServiceMock
     let spyGetItems;
     beforeEach(() => {
       spyGetItems = spyOn(service, 'getItems').and.callThrough();
@@ -83,7 +83,7 @@ describe('ItemsListContainerComponent', () => {
       expect(component.nextId).toEqual(nextId);
     }));
   });
-  describe('#ngOnInit when service returns an error', () => {
+  describe('# testing component initialization when #getItems service returns an error', () => {
     beforeEach(() => {
       spyOn(service, 'getItems').and.returnValue(throwError('err'));
       // En este caso modificamos lo que devuelve "getItems", devolviendo un error.
@@ -100,7 +100,7 @@ describe('ItemsListContainerComponent', () => {
       expect(component.nextId).toBe(0);
     }));
   });
-  describe('#after ngOnInit', () => {
+  describe('# testing component after initialization', () => {
     beforeEach(() => {
       fixture.detectChanges();
       // detecta los cambios y actualiza la vista. Ejecutamos ngOnInit antes de cada test
