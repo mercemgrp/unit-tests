@@ -65,6 +65,10 @@ describe('ModifyItemContainerComponent', () => {
     tick();
     expect(spy).toHaveBeenCalled();
   }));
+  /**
+   * En este test modificamos el valor que retorna la función "getItem"
+   * mediante "returnValue"
+   */
   it('should fill #item from service response at init', fakeAsync(() => {
     const response = {id: 1, title: 'test', description: '1 - test'};
     spyOn(service, 'getItem').and.returnValue(of(response));
@@ -83,6 +87,9 @@ describe('ModifyItemContainerComponent', () => {
     component.navigateToItems();
     expect(spy).toHaveBeenCalled();
   });
+  /**
+   * En este test espiamos el router cuando navega
+   */
   it('should call service to modify item when #submit()', fakeAsync(() => {
     spyOn(router, 'navigate');
     const spy = spyOn(service, 'modifyItem').and.callThrough();

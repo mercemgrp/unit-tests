@@ -16,6 +16,12 @@ describe('AppGuard', () => {
   it('should create', (() => {
     expect(guard).toBeTruthy();
   }));
+  /**
+   * canActive() es una promesa por lo que es asíncrona.
+   * En este test comprobamos que cuando se resuelve, se retorna "true"
+   *
+   */
+
   it('should return true when resolve', fakeAsync(() => {
     const resolver = guard.canActivate();
     resolver.then(resp => {

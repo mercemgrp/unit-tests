@@ -24,10 +24,7 @@ export class ModifyItemContainerComponent implements OnInit {
   submit(item: Item) {
     this.service.modifyItem(item).
     pipe(first()).subscribe(
-      resp => {
-        console.log('OK');
-        this.router.navigate(['items']);
-      },
+      resp => this.router.navigate(['items']),
       () => console.log('ERROR')
     );
   }

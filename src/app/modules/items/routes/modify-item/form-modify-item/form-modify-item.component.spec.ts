@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormModifyItemComponent } from './form-modify-item.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SimpleChanges } from '@angular/core';
-import { By } from '@angular/platform-browser';
 
 describe('FormModifyItemComponent', () => {
   let component: FormModifyItemComponent;
@@ -56,10 +55,10 @@ describe('FormModifyItemComponent', () => {
     it('title control should has the #item.title value', () => {
       expect(component.titleControl.value).toBe(component.item.title);
     });
-    it('should get the id control when call get #idControl', () => {
+    it('should get the id control when call getter #idControl', () => {
       expect(component.idControl).toBeDefined();
     });
-    it('should get the title when call get #titleControl', () => {
+    it('should get the title when call getter #titleControl', () => {
       expect(component.titleControl).toBeDefined();
     });
   });

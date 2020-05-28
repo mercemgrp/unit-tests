@@ -4,6 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SimpleChanges } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
+/**
+ * En el testeo de este componente apilamos de la siguiente manera:
+ * (Sin apilar): Testeo componente antes de que se ejecute ngOnChanges
+ * Pila 1: Testeo componente una vez ejecutado ngOnChanges
+ * Pila 3: Testeo la vista simulando una acción del usuario (click de un botón, modificación de un input...)
+ */
 describe('FormAddItemComponent', () => {
   let component: FormAddItemComponent;
   let fixture: ComponentFixture<FormAddItemComponent>;
@@ -104,28 +110,49 @@ describe('FormAddItemComponent', () => {
       });
     });
   });
+  /**
+   * Es recomendable cuando testeamos la vista añadir una clase al elemento a probar.
+   * En este caso hemos añadido las clases "qa-btn-submit", "qa-title-error" y "qa-input-title"
+   * Cuando modificamos un elemento simulando una acción del usuario,
+   * para que la vista se actualice debemos ejecutar "fixture.detectChanges()"
+   */
   describe('testing user interaction', () => {
     beforeEach(() => {
       fixture = TestBed.createComponent(FormAddItemComponent);
       component = fixture.componentInstance;
       component.ngOnChanges();
-      fixture.detectChanges(); // Actualizo la vista
+      fixture.detectChanges();
     });
+    /**
+     * Simulamos el click del botón
+     * Comprobamos que se ha llamado al método "submit"
+     */
     it('should submit when click in button', () => {
       const spyButton = spyOn(component, 'submit');
       fixture.nativeElement.querySelector('.qa-btn-submit').click();
       expect(spyButton).toHaveBeenCalled();
     });
-    it('shouldnt exist div with class "qa-title-error" when #showError is false', () => {
-      const element = fixture.debugElement.query(By.css('qa-title-error'));
+    /**
+     * Comprobamos que al inicio el elemento no se muestra en la vista
+     */
+    it('shouldnt exist div with class "qa-title-error" when #formInvalid is false', () => {
+      const element = fixture.debugElement.query(By.css('.qa-title-error'));
       expect(element).toBe(null);
     });
-    it('should exist div with class "qa-title-error" when getter #showError is true', () => {
-      component.submit(); // Ejecutamos submit para que el getter showError() devuelva true
-      fixture.detectChanges(); // Actualizamos la vista
-      const element = fixture.debugElement.query(By.css('qa-title-error'));
-      expect(element).toBe(null); // Comprobamos que el elemento no se muestra
+    /**
+     * Comprobamos que cuando hacemos submit y el formulario no es correcto
+     * #formInvalid es true y el elemento aparece
+     */
+    it('should exist div with class "qa-title-error" when getter #formInvalid is true', () => {
+      component.submit();
+      fixture.detectChanges();
+      const element = fixture.debugElement.query(By.css('.qa-title-error'));
+      expect(element).toBeDefined();
     });
+    /**
+     * Simulamos que vaciamos el valor del input,
+     * enviamos el evento y comprobamos que el formulario es inválido
+     */
     it('form should be invalid when title control is empty', () => {
       const element = fixture.debugElement.query(By.css('.qa-input-title'));
       element.nativeElement.value = '';
@@ -133,6 +160,10 @@ describe('FormAddItemComponent', () => {
       fixture.detectChanges();
       expect(component.form.valid).toBe(false);
     });
+    /**
+     * Simulamos que rellenamos el valor del input,
+     * enviamos el evento y comprobamos que el formulario es válido
+     */
     it('form should be valid when title control has a value', () => {
       const element = fixture.debugElement.query(By.css('.qa-input-title'));
       element.nativeElement.value = 'test';

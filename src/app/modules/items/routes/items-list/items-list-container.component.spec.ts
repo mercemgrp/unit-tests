@@ -6,6 +6,12 @@ import { ItemsService } from '../../items.service';
 import { of, throwError } from 'rxjs';
 import { Item } from '../../item';
 
+/**
+ * Crearemos pilas de tests por funcionalidades
+ * Pila 1: Testeamos el componente cuando inicializamos la app ngOnInit() y el servicio retorna un valor
+ * Pila 2: Testeamos el componente cuando inicializamos la app ngOnInit() y el servicio retorna un error
+ * Pila 3: Testeamos el componente cuando ya se ha inicializado
+ */
 describe('ItemsListContainerComponent', () => {
   const data = [{id: 1, title: 'test', description: '1 - test'}];
   const pushData = [
@@ -53,22 +59,28 @@ describe('ItemsListContainerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  describe('#ngOnInit', () => { // Usamos tal cuál los valores retornados por ItemsServiceMock
+  /**
+   * Al inicializar la app llamamos a un servicio, por lo que los tests aquí descritos deben ser asíncronos
+   */
+  describe('#ngOnInit()', () => {
     let spyGetItems;
     beforeEach(() => {
+      /**
+       * Espiamos "getItems" y cuando llegue a esa función, se ejecuta (porque hemos añadido "callThrough")
+       * En este caso como hemos mockeado el servicio, cuando se resuelve devolverá
+       * lo indicado en ItemsServiceMock
+       */
       spyGetItems = spyOn(service, 'getItems').and.callThrough();
-        // Espiamos "getItems" y cuando llegue a eas función, se ejecuta ("callThrough")
     });
-    it('should call get data service', fakeAsync(() => {
+    it('should call get data service', fakeAsync(() => { // "fakeAsync" indica que es un test asíncrono
       fixture.detectChanges(); // detecta los cambios y actualiza la vista. Ejecutamos ngOnInit
-      tick(); // Resuelve elementos asíncronos (observables)
-      expect(spyGetItems).toHaveBeenCalled(); // Comprobamos que ha llamado a esta función
+      tick(); // Resuelve elementos asíncronos (observables/promesas...)
+      expect(spyGetItems).toHaveBeenCalled(); // Comprobamos que ha llamado a "getItems"
     }));
     it('should fill data with the response', fakeAsync(() => {
       fixture.detectChanges();
       tick();
       expect(component.data).toEqual(data);
-      // Comprobamos que "data" se ha rellenado con lo que ha devuelto el servicio
     }));
     it('should call #getNextId', fakeAsync(() => {
       const spy = spyOn(service, 'getNextId').and.callThrough();
@@ -78,16 +90,19 @@ describe('ItemsListContainerComponent', () => {
     }));
     it('should fill #nextId param', fakeAsync(() => {
       spyOn(service, 'getNextId').and.callThrough();
-      fixture.detectChanges(); // detecta los cambios y actualiza la vista
+      fixture.detectChanges();
       tick();
       expect(component.nextId).toEqual(nextId);
     }));
   });
   describe('#ngOnInit when service returns an error', () => {
     beforeEach(() => {
+      /**
+       * En este caso modificamos lo que devuelve "getItems", retornando un error.
+       * Por lo que estamos probando la inicialización del componente cuando
+       * el servicio "getItems" retorna un error
+       */
       spyOn(service, 'getItems').and.returnValue(throwError('err'));
-      // En este caso modificamos lo que devuelve "getItems", devolviendo un error.
-      // Por lo que el observable pasa por "error"
     });
     it('should #data be null', fakeAsync(() => {
       fixture.detectChanges();
@@ -101,10 +116,10 @@ describe('ItemsListContainerComponent', () => {
     }));
   });
   describe('#after ngOnInit', () => {
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture.detectChanges();
-      // detecta los cambios y actualiza la vista. Ejecutamos ngOnInit antes de cada test
-    });
+      tick();
+    }));
     it('should toggle #showForm when #toggleAddItem()', (() => {
       component.showForm = true;
       component.toggleAddItem();
