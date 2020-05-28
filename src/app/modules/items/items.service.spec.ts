@@ -68,6 +68,8 @@ describe('ItemsService', () => {
         httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpointGetItems)).flush(data);
         httpMock.verify();
       });
+      httpMock.expectOne(request => request.method === 'GET' && request.url.includes(endpointGetItems)).flush(data);
+      httpMock.verify();
     });
     describe('# #items stored in service', () => {
       beforeEach(() => {
@@ -94,7 +96,16 @@ describe('ItemsService', () => {
         {id: 2, title: 'test', description: '2 - test'}
       ];
     });
-    it('should thrown an error when param is null', fakeAsync(() => {
+    it('#getItems() should get data from variable', fakeAsync(() => {
+      const observable = service.getItems();
+      observable.subscribe(res => {
+        expect(res).toEqual(service.items);
+      });
+      httpMock.expectNone(request => request.method === 'GET');
+      httpMock.verify();
+      tick();
+    }));
+    it('#pushItem() should thrown an error when param is null', fakeAsync(() => {
       service.pushItem(null)
         .subscribe(
           resp => {},
@@ -102,9 +113,9 @@ describe('ItemsService', () => {
         );
       tick();
     }));
-    it('should push data and transform when param is not null', fakeAsync(() => {
+    it('#pushItem() should push data and transform when param is not null', fakeAsync(() => {
       const result = [
-        {id: 1, title: 'test', description : '1 - test'},
+        {id: 1, title: 'test', description: '1 - test'},
         {id: 2, title: 'test', description: '2 - test'},
         {id: 3, title: 'test', description: '3 - test'}
       ];
@@ -132,7 +143,7 @@ describe('ItemsService', () => {
         );
       tick();
     }));
-    it('should modify data and transform when param is not null', fakeAsync(() => {
+    it('#modifyItem() should modify data and transform when param is not null', fakeAsync(() => {
       const result = [
         {id: 1, title: 'test', description : '1 - test'},
         {id: 2, title: 'test-modified', description: '2 - test-modified'}
@@ -181,13 +192,9 @@ describe('ItemsService', () => {
       ];
       expect(service.getNextId()).toBe(3);
     });
-    it('should get 1 when data is null', () => {
-      service.items = null;
-      expect(service.getNextId()).toBe(1);
-    });
-    it('should get 1 when no data', () => {
-      service.items = [];
-      expect(service.getNextId()).toBe(1);
-    });
+  });
+  it('#getNextId() should get 1 when #items is an empty array', () => {
+    service.items = [];
+    expect(service.getNextId()).toBe(1);
   });
 });

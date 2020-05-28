@@ -36,20 +36,23 @@ describe('FormAddItemComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('#form shouldnt be defined', () => {
-    expect(component.form).toBeUndefined();
+  describe('# testing component when @nextId hasnt a value', () => {
+    it('#form shouldnt be defined', () => {
+      expect(component.form).toBeUndefined();
+    });
+    it('getter #idControl should be null', () => {
+      expect(component.idControl).toBe(null);
+    });
+    it('getter #titleControl should be null', () => {
+      expect(component.titleControl).toBe(null);
+    });
+    it('should create form when #ngOnChanges() the first time', () => {
+      component.ngOnChanges(null);
+      expect(component.form).toBeDefined();
+    });
   });
-  it('getter #idControl should be null', () => {
-    expect(component.idControl).toBe(null);
-  });
-  it('getter #titleControl should be null', () => {
-    expect(component.titleControl).toBe(null);
-  });
-  it('should create form when #ngOnChanges() the first time', () => {
-    component.ngOnChanges(null);
-    expect(component.form).toBeDefined();
-  });
-  describe('changes @nextId executing #ngOnChanges()', () => {
+
+  describe('# testing component when changes @nextId executing #ngOnChanges()', () => {
     beforeEach(() => {
       component.nextId = 3;
       const changes: SimpleChanges = {

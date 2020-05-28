@@ -82,10 +82,29 @@ describe('ModifyItemContainerComponent', () => {
       tick();
     }));
   });
-  it('should navigate when #navigateToItems()', () => {
-    const spy = spyOn(router, 'navigate');
-    component.navigateToItems();
-    expect(spy).toHaveBeenCalled();
+  describe('# testing componet after initialization', () => {
+    beforeEach(fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+    }));
+    it('should navigate when #navigateToItems()', () => {
+      const spy = spyOn(router, 'navigate');
+      component.navigateToItems();
+      expect(spy).toHaveBeenCalled();
+    });
+    it('should call service to modify item when #submit()', fakeAsync(() => {
+      spyOn(router, 'navigate');
+      const spy = spyOn(service, 'modifyItem').and.callThrough();
+      component.submit({id: 1, title: 'test'});
+      tick();
+      expect(spy).toHaveBeenCalled();
+    }));
+    it('should navigate when #submit()', fakeAsync(() => {
+      const spy = spyOn(router, 'navigate');
+      component.submit({id: 1, title: 'test'});
+      tick();
+      expect(spy).toHaveBeenCalled();
+    }));
   });
   /**
    * En este test espiamos el router cuando navega
