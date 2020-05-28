@@ -59,14 +59,10 @@ describe('ItemsListContainerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-<<<<<<< HEAD
   /**
    * Al inicializar la app llamamos a un servicio, por lo que los tests aquí descritos deben ser asíncronos
    */
   describe('#ngOnInit()', () => {
-=======
-  describe('# testing component initialization', () => { // Usamos tal cuál los valores retornados por ItemsServiceMock
->>>>>>> 9077aa260d57491db30aabb26eb994221eb32228
     let spyGetItems;
     beforeEach(() => {
       /**
@@ -119,13 +115,8 @@ describe('ItemsListContainerComponent', () => {
       expect(component.nextId).toBe(0);
     }));
   });
-<<<<<<< HEAD
   describe('#after ngOnInit', () => {
     beforeEach(fakeAsync(() => {
-=======
-  describe('# testing component after initialization', () => {
-    beforeEach(() => {
->>>>>>> 9077aa260d57491db30aabb26eb994221eb32228
       fixture.detectChanges();
       tick();
     }));
